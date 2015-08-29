@@ -1,0 +1,16 @@
+{
+  "name": "laravel-jquery-form-errors",
+  "main": "source/form-errors.js",
+  "version": "0.1.1",
+  "homepage": "https://github.com/arifmahmudrana/laravel-jquery-form-errors",
+  "authors": [
+    "Arif Mahmud Rana <arif_mahmud_rana@hotmail.com>"
+  ],
+  "description": "A jQuery plugin that simply shows laravel validation form errors for client side",
+  "keywords": [
+    "jquery",
+    "laravel5",
+    "form validation"
+  ],
+  "license": "MIT"
+}
