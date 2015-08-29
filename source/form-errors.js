@@ -1,16 +1,13 @@
-# laravel-jquery-form-errors
-#### Simply show laravel validation form errors for client side
+/* https://amrme.wordpress.com/
+ Laravel Form Errors jQuery v0.1.0.
+ Written by Arif Mahmud Rana (arif_mahmud_rana{at}hotmail.com) August 2015.
+ Available under the MIT (https://raw.githubusercontent.com/arifmahmudrana/laravel-jquery-form-errors/master/LICENSE) license.
+ Please attribute the author if you use it. */
 
-This is a simple plugin that shows laravel validation errors for forms in a simple way. It assumes in your form you are using **.form-group** class to group your form controls and you have a **.help-block.text-danger** element right after your form control which you are validating. After you submit your form and get an error you just need to trigger the custom **laravel.form-errors** event on your form or in document or body. It will search form element from **event target** and add bootstrap **.has-error** class on closest **.form-group** element and will show the first error in the **.help-block.text-danger** section.
- 
-### Dependencies
-- Laravel 5
-- jQuery
-- Bootstrap 3
+/* Display form errors after validating from laravel validation service.
 
-### Usage
-**Your html form**
-
+ How to use :
+    Your html form
      {!! Form::open(['route' => 'YOUR_ROUTE', 'role' => 'form']) !!}
 
          <div class="form-group">
@@ -26,11 +23,8 @@ This is a simple plugin that shows laravel validation errors for forms in a simp
          </div>
 
      {!! Form::close() !!}
-     
-     
-**Your js form submit handler**
-     
-     
+
+     Your js form submit handler
          jQuery ( 'YOUR_SELECTOR_TO_SELECT_FORM' ).on ( 'submit', function(e) {
             var _self = jQuery(this);
             jQuery.ajax ( {
@@ -45,9 +39,23 @@ This is a simple plugin that shows laravel validation errors for forms in a simp
             });
          } );
 
-### Contribute
-You can fork and contribute to development of the package. All pull requests is welcome.
+  */
 
-### License
+(function($) {
+    var _registerEvent = function() {
+        jQuery(document).on('laravel.form-errors', function(e, data) {
+            $.formErrors(e, data.jqXHR, data.textStatus, data.errorThrown);
+        });
+    };
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://raw.githubusercontent.com/arifmahmudrana/laravel-jquery-form-errors/master/LICENSE)
+    $.formErrors = function( e, jqXHR, textStatus, errorThrown ) {
+        var _target = e.target;
+        if ( jqXHR.status == 422 ) {
+            jQuery.each ( jqXHR.responseJSON, function ( i, v ) {
+                jQuery ( _target ).find( '[name="' + i + '"]' ).closest ( '.form-group' ).addClass ( 'has-error' ).find ( '.help-block.text-danger' ).hide().html ( v.shift () ).slideDown(500);
+            });
+        }
+    };
+
+    _registerEvent();
+}(jQuery));
